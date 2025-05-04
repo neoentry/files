@@ -1,0 +1,14 @@
+# Step 1: Install IIS Role
+Install-WindowsFeature -Name Web-Server -IncludeManagementTools
+
+# Step 2: Create custom HTML content
+$Content = @"
+This is VM2.
+"@
+
+# Step 3: Write content to IIS default site location
+$Path = "C:\inetpub\wwwroot\index.html"
+$Content | Set-Content -Path $Path -Encoding UTF8
+
+# Optional: Restart IIS to ensure everything is loaded
+iisreset
