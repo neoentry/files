@@ -1,0 +1,213 @@
+###############################################################################################################################################
+								Azure Web App
+###############################################################################################################################################
+
+
+
+#################
+Important Points
+#################
+
+
+.
+🌐 Azure Web App – Everything You Need to Know
+Azure Web App is a Platform as a Service (PaaS) that enables you to host web applications, REST APIs, and mobile backends in a fully managed environment without managing infrastructure.
+
+🚀 Core Features
+Feature	Description
+Fully Managed	No need to manage OS, patches, or hardware. Azure handles it.
+Supports Multiple Stacks	.NET, Java, PHP, Node.js, Python, Ruby, Go, and custom containers
+Deployment Options	GitHub, Azure DevOps, FTP, ZIP, Docker, CLI
+Built-in Auto Scaling	Scale up (bigger instance) or out (more instances)
+Custom Domains & SSL	Bind custom domains; free or custom SSL certs
+Authentication & Authorization	Built-in auth with Azure AD, Google, Facebook, etc.
+Staging Slots	Blue-green deployments with zero downtime
+Integrated CI/CD	Native integration with GitHub, Azure DevOps
+Monitoring	Azure Monitor, App Insights, Kusto queries
+Hybrid Connectivity	VNet integration, private endpoints, Hybrid Connections
+Multiregion Deployment	Easily deploy and sync apps across regions
+
+📦 App Service Plans
+The App Service Plan defines the region, pricing tier, scaling, and compute resources your app uses.
+
+🔹 Plan Types:
+Plan Tier	Use Case
+Free / Shared (F1, D1)	Testing, small apps. Limited features.
+Basic (B1–B3)	Small to medium workloads, no autoscaling.
+Standard (S1–S3)	Production workloads, autoscaling, SSL, custom domains.
+Premium (P1v3+)	High-performance, VNet, larger scale, deployment slots.
+Isolated / ASE (I1–I3)	Private VNet, high compliance, massive scale.
+Elastic Premium (EP1–EP3)	For Azure Functions with high scaling needs.
+
+🧠 Choose a Premium plan for features like VNet integration, custom image support, and faster scaling.
+
+🧱 Architecture Overview
+An Azure Web App typically includes:
+
+App Service Plan (compute tier)
+
+App Instance (web app code)
+
+Deployment Slot(s) (e.g., staging, QA, prod)
+
+Connected services (DBs, caches, APIs, etc.)
+
+Networking (private endpoint or VNet)
+
+🗂️ Supported Languages & Runtimes
+Language	Runtime Versions
+.NET / .NET Core	3.1, 6, 7, 8
+Node.js	LTS and Current
+Java	SE and Tomcat 8.5/9/10
+Python	3.7–3.11
+PHP	7.4, 8.x
+Ruby	2.x
+Custom	Docker containers or custom images
+
+🔐 Security Features
+Authentication/Authorization (via Azure AD, Facebook, Twitter, etc.)
+
+Private endpoint support
+
+VNet integration (for backend access and isolation)
+
+TLS/SSL Certificates (free App Service cert or custom)
+
+IP Restrictions and Access Rules
+
+Managed Identity (for accessing Azure services securely)
+
+🔄 Deployment & DevOps
+Method	Notes
+GitHub Actions	CI/CD directly from repo
+Azure DevOps	Pipelines for build and release
+ZIP Deploy	Fast deploy via CLI or FTP
+FTP / Web Deploy	For manual updates
+Docker	Deploy container images from Docker Hub or ACR
+ARM/Bicep/Terraform	Infrastructure as Code
+
+🧪 Testing & Deployment Slots
+Create staging, testing, or QA slots.
+
+Swap slots to promote to production with zero downtime.
+
+Warm-up apps in the background before swap.
+
+Useful for A/B testing or canary releases.
+
+📊 Monitoring and Diagnostics
+App Insights: Request tracing, performance, live metrics
+
+Log Stream: Real-time logging via portal or CLI
+
+Kudu: Advanced SCM and debug console
+
+Azure Monitor: Metrics and alerts
+
+Diagnostic Settings: Export logs to Log Analytics, Storage, or Event Hub
+
+🔄 Scaling Options
+Scale Type	Description
+Vertical (Up)	Increase CPU/RAM with higher tier
+Horizontal (Out)	Add more instances manually or automatically
+Autoscaling	Based on CPU, memory, schedule, or custom rules
+Geo-distribution	Deploy app across multiple regions for redundancy
+
+💰 Pricing Considerations
+Based on:
+
+App Service Plan (tier, instance count)
+
+Data transfer out
+
+Features (slots, backups, VNet)
+
+Use the Azure Pricing Calculator to estimate.
+
+🧰 Networking Features
+VNet Integration: App can access internal resources (Premium only)
+
+Private Endpoint: App accessible only inside private network
+
+Hybrid Connections: Connect to on-prem services via TCP
+
+App Gateway / Front Door: Use with reverse proxies or WAF
+
+🛡️ Compliance & Governance
+ISO, SOC, GDPR, FedRAMP compliant
+
+Identity and access control via Azure RBAC
+
+Secure DevOps support (e.g., Azure Blueprints)
+
+✅ Common Use Cases
+Business websites and e-commerce apps
+
+REST APIs for mobile and web apps
+
+SaaS applications
+
+Legacy .NET apps migrated to PaaS
+
+Lightweight internal apps (HR portals, dashboards)
+
+⚠️ Limitations to Know
+Web App does not support raw TCP/UDP — HTTP/S only
+
+Long-running tasks (background jobs) require WebJobs or Azure Functions
+
+VNet integration only with Premium or Isolated tiers
+
+No root access to VM — limited control over system-level configs
+
+🔄 Alternatives / When Not to Use
+Consider	Instead
+Raw TCP or WebSocket load balancing	Azure Application Gateway or Load Balancer
+Massive global scale & edge caching	Azure Front Door or CDN
+Event-driven workloads	Azure Functions
+Full container orchestration	Azure Kubernetes Service (AKS)
+
+#######################
+Service Settings
+#######################
+
+1)
+
+"Try a secure unique default hostname" means:
+Secure Default Hostname:
+
+When you enable this option, Azure assigns a secure (HTTPS) version of the default hostname. This means your web app will be automatically accessible via HTTPS (SSL/TLS encryption) instead of HTTP. This provides an extra layer of security for your application without requiring any additional setup for SSL certificates or configurations.
+
+Unique Hostname:
+
+Azure ensures that the default hostname is unique across its platform. It generates a custom subdomain name (under azurewebsites.net) for each new app, ensuring no two apps share the same default URL.
+
+2) Basic authentication means using a username and password (not OAuth tokens or certificates) to deploy your code to the web app. This is typically used for:
+
+FTP/S FTP deployment
+
+Web Deploy (used in Visual Studio)
+
+Kudu/SCM deployment endpoints
+
+When this option is enabled, Azure allows:
+
+Deployment via these protocols using credentials
+
+Username: $yourwebappname or deployment user
+
+Password: Your Azure deployment password or per-app credential
+
+3) Virtual Network (VNet) Integration in Azure Web App allows your web app to securely access resources inside an Azure Virtual Network—such as databases, APIs, or internal services—that are not exposed to the public internet.
+
+#######################
+Demo
+#######################
+
+1) Login to vs code and authenticate to your subscription
+
+2) Download this source code and open in vs code https://github.com/Azure-Samples/msdocs-python-flask-webapp-quickstart
+
+3) create a python web app in azure with basic app service plan
+
+4) right click web app in azure and Deploy 

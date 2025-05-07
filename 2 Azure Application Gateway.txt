@@ -1,0 +1,175 @@
+###############################################################################################################################################
+								Azure Application Gateway
+###############################################################################################################################################
+
+
+
+#################
+Important Points
+#################
+
+
+🔧 Core Features
+1. Layer 7 Load Balancing
+Routes incoming HTTP/HTTPS traffic based on URL path or host headers.
+
+Supports multiple site hosting on the same gateway using listener-based routing rules.
+
+2. SSL Termination and End-to-End SSL
+Offloads SSL processing from your backend servers.
+
+Can also re-encrypt traffic to backend (end-to-end SSL).
+
+3. Web Application Firewall (WAF)
+Protects against OWASP Top 10 threats (e.g., SQL Injection, XSS).
+
+Two modes: Detection (logs only) and Prevention (actively blocks).
+
+Updated regularly with new rulesets.
+
+4. URL-Based Routing
+Direct requests to different backend pools based on the URL (e.g., /images/ goes to one pool, /api/ to another).
+
+5. Multi-Site Hosting
+Hosts multiple web apps using different domain names on the same gateway (e.g., app1.com, app2.com).
+
+6. Session Affinity (Cookie-Based)
+Ensures a user session is consistently routed to the same backend (via Application Gateway cookie).
+
+7. Custom Probes
+Health checks for backend servers.
+
+Customizable HTTP settings to control probe paths, intervals, and timeout values.
+
+🛠️ Architecture Components
+Frontend IP Configuration: Public or Private IP.
+
+Listeners: Define how requests are received (HTTP, HTTPS).
+
+Rules: Define how traffic is routed (basic or path-based).
+
+Backend Pools: Set of backend servers (VMs, App Services, etc.).
+
+HTTP Settings: Configure how traffic is sent to backends (port, protocol, cookie settings, etc.).
+
+Probes: Monitor backend health.
+
+☁️ Integration Options
+Azure App Services: Easily integrated as backends.
+
+Virtual Machine Scale Sets: Supports autoscaling backends.
+
+Azure Kubernetes Service (AKS): Use as ingress controller with the Application Gateway Ingress Controller (AGIC).
+
+Private Link / VNet Integration: Deploy entirely within a VNet for secure private access.
+
+📊 Scalability & Availability
+Autoscaling: Adjusts capacity automatically based on traffic.
+
+Zone Redundancy: Deploy across availability zones for high availability.
+
+Global Reach: Works well with Azure Front Door for global routing.
+
+💰 Pricing
+Charged based on:
+
+Instance size & count
+
+Data processing
+
+WAF enabled or not
+
+Outbound data transfer
+
+🧱 Deployment Modes
+Standard v1 (Legacy – limited features)
+
+Standard v2 and WAF v2 (Recommended – faster provisioning, autoscaling, better performance)
+
+✅ When to Use Azure Application Gateway
+Hosting web applications with high traffic.
+
+Need for advanced routing logic.
+
+Require centralized SSL termination.
+
+Protect web apps using WAF.
+
+Support multiple sites on one gateway.
+
+Integration with AKS for Kubernetes ingress.
+
+⚠️ Limitations and Considerations
+Only supports HTTP/HTTPS traffic (no TCP/UDP).
+
+Can take time to provision (esp. WAF v2).
+
+Configuration changes can be complex without automation (Bicep, ARM templates, or Terraform recommended).
+
+Costs can grow with WAF and autoscaling.
+
+
+#######################
+Service Settings
+#######################
+
+1)  Standard (v1) – Legacy Model
+🔹 Overview
+The original version of Application Gateway.
+
+Suitable for simple use cases with lower traffic demands.
+
+Does not support autoscaling or zone redundancy.
+
+
+| Feature           | Standard v2 | WAF v2 |
+| ----------------- | ----------- | ------ |
+| Load Balancing    | ✅           | ✅      |
+| Autoscaling       | ✅           | ✅      |
+| Zone Redundant    | ✅           | ✅      |
+| WAF (OWASP rules) | ❌           | ✅      |
+| Threat Protection | ❌           | ✅      |
+| WAF Logging       | ❌           | ✅      |
+
+
+2)http2 :  If you want http2 protocol in the frontend of the application gateway
+
+3) Cookie-based affinity : if you want user session to remain on the same server
+
+
+4) 
+Connection draining helps gracefully remove backend pool members during planned service updates. When this feature is enabled, de-registering instances of a backend pool won’t receive new requests. This applies to backend instances that are explicitly removed from the backend pool via an API call as well as instances reported unhealthy by health probes.
+
+5) 
+The request timeout is the number of seconds that the application gateway will wait to receive a response from the backend pool before it returns a “connection timed out” error message.
+
+6) Override backend path : in case you want to route user equests to specific path rather than the default path
+
+7) The "Override with new hostname" feature in Azure Application Gateway allows you to change the Host header in the HTTP request before it’s forwarded to the backend servers.It replaces the original host header sent by the client with a new hostname that you define in your HTTP settings.
+
+
+#######################
+Demo
+#######################
+
+1) Create two web apps webapp1 and webapp2
+
+2) create app gateway using below steps and test
+
+
+a)	create two web apps ->in wwwroot folder create a folder images -> create Default.html file with some content
+b)	Similarly create another server with videos folder created and default.html
+c)	In another tab verify by typing publicip/images/Default.html
+d)	Create application gateway service
+•	You can enable autoscaling so based on the demand azure will manage the number of backend resources necessary. So you need to specify minimum and maximum instance count.
+•	For now you can leave autoscaling as no.
+•	Create new subnet for the app gateway
+•	Create two backend pools , one for the images and one for the videos, then select respective VMs
+e)	Create routing ruleA  -> create a listener -> and give port 80 with protocol http -> leave other settings as default.
+f)	Click add multiple targets to create path based rule -> backend pool for target type -> in path give /images/* -> give any target name -> choose setting and backend target -> 
+g)	Repeak this again for videos path
+h)	The target type which we mention in the rule is the default target in case anything goes wrong 
+i)	In another tab test by putting application gateway publicip/videos/Default.html
+j)	To assign a dns name to the app gateway url you can click the public ip -> configuration and give a unique name. Test this by taking the dnsname/images/Default.html
+
+

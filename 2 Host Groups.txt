@@ -1,0 +1,40 @@
+1) Azure Dedicated Hosts allow you to provision and manage a physical server within our data centers that are dedicated to your Azure subscription. A dedicated host gives you assurance that only VMs from your subscription are on the host, flexibility to choose VMs from your subscription that will be provisioned on the host, and the control of platform maintenance at the level of the host.
+
+2)
+
+🔹 What Is an Azure Host Group?
+An Azure Host Group is a container for dedicated hosts. It defines a collection of physical servers in a particular availability zone and region that can be used to deploy VMs on Azure Dedicated Hosts.
+
+🔸 Key Concepts
+Dedicated Host:
+
+A physical server dedicated to your organization.
+
+You control the maintenance policies and VM placement.
+
+Host Group:
+
+Logical grouping of one or more dedicated hosts.
+
+Can span multiple fault domains within a single availability zone.
+
+Defines placement constraints for high availability.
+
+Fault Domain:
+
+A grouping to ensure hardware diversity.
+
+Helps with availability during hardware failures or maintenance.
+
+🔹 Why Use Host Groups?
+Compliance: Ensure VMs run on isolated hardware.
+
+Licensing: Bring your own licenses (BYOL) for Windows Server, SQL Server, etc.
+
+Control: Greater control over VM placement and maintenance.
+
+High Availability: Distribute across fault domains to reduce downtime risk.
+
+🔸 Example Use Case
+You're running sensitive workloads requiring dedicated hardware and want to isolate them within a specific availability zone. You create a host group, add several dedicated hosts, and then deploy your VMs to those hosts for better security and compliance.
+

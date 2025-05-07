@@ -1,0 +1,105 @@
+###############################################################################################################################################
+								Azure Availability Sets
+###############################################################################################################################################
+
+
+
+#################
+Important Points
+#################
+
+
+1) Azure Availability Sets are a core component of Microsoft Azure’s high availability (HA) and disaster recovery (DR) strategy. They are specifically designed to ensure that your virtual machines (VMs) are resilient to hardware failures and maintenance events.
+
+
+
+2) Azure distributes your VMs across multiple fault domains and update domains within a data center to protect against localized failures.
+
+
+
+
+3) Fault Domain (FD)
+A fault domain is essentially a group of hardware that shares a common power source and network switch.
+
+Azure automatically spreads VMs in an Availability Set across multiple FDs.
+
+This helps mitigate the impact of hardware failures like disk, power, or network outages.
+
+Example: If you have 3 FDs and 3 VMs, each VM will be placed in a separate FD.
+
+
+
+
+4) Update Domain (UD)
+An update domain represents a group of VMs that can be rebooted simultaneously during planned maintenance (e.g., patching the OS or hypervisor).
+
+Azure ensures that not all VMs in an Availability Set are updated at the same time.
+
+Example: With 5 UDs, planned maintenance is applied one UD at a time.
+
+
+
+5)  Benefits
+99.95% SLA (Service-Level Agreement) for VMs in an Availability Set.
+
+Resilience to hardware failures and planned maintenance.
+
+Cost-effective HA solution within a single Azure region.
+
+No additional cost for using Availability Sets (you only pay for the VMs and resources).
+
+
+
+6)High Availability
+When you place two or more VMs in an Availability Set:
+
+They are automatically distributed across multiple FDs and UDs.
+
+This increases your application’s uptime and availability.
+
+
+
+7) Limitations
+Only works within a single data center (availability zone) in a region.
+
+You cannot move an existing VM into an Availability Set; it must be created within one from the start.
+
+Doesn’t offer geographic redundancy (use Availability Zones or paired regions for that).
+
+You must manage load balancing and failover logic manually or with Azure Load Balancer.
+
+
+
+8) | Feature         | Availability Set   | Availability Zone          |
+| --------------- | ------------------ | -------------------------- |
+| Fault tolerance | Rack-level         | Data center-level          |
+| SLA             | 99.95%             | 99.99%                     |
+| Scope           | Single data center | Multiple zones in a region |
+| Network latency | Low                | Higher than sets           |
+| Use case        | Basic HA           | Advanced HA and DR         |
+
+
+
+9) Best Practices
+
+Minimum 2 VMs per set to ensure at least one remains operational during failures.
+
+Use with Azure Load Balancer to distribute traffic across VMs.
+
+Monitor VM health and performance via Azure Monitor.
+
+For mission-critical workloads, consider Availability Zones or Azure Site Recovery in conjunction.
+
+10) Availability Sets impact the physical placement of a VM within Azure’s data centers. Once a VM is deployed, its placement (based on fault and update domains) is fixed, and changing the availability set would require moving the VM to a different physical cluster, which Azure does not support dynamically.
+
+
+#######################
+Service Settings
+#######################
+
+1) Proximity Placement Groups (PPGs) in Azure are a feature designed to ensure that resources (like virtual machines) are deployed close together in physical proximity within the same Azure region. This is particularly useful for workloads that require low latency, high throughput, and high-performance network communication between resources.
+
+
+2) Unmanaged disks in Azure refer to virtual machine (VM) disks that are stored in a storage account that you manually manage. Before Azure introduced managed disks, unmanaged disks were the default way to manage VM disks in Azure. While managed disks are now the recommended option, unmanaged disks are still supported and can be used in specific scenarios.
+
+With unmanaged disks, the user is responsible for managing both the disks and the storage accounts where these disks are stored. Here's a breakdown of key points about unmanaged disks in Azure:
